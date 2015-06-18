@@ -42,12 +42,11 @@ class LoginHandler(BaseHandler):
         self.write(re)
 
 
+
 class CameraHandler(BaseHandler):
     @auth
-    @tornado.web.asynchronous
-    @tornado.gen.engine
     def get(self):
-        ret, image = yield tornado.gen.Task(self.application.cap.read)
+        ret, image = self.application.cap.read()
         self.set_header("Content-Type", "image/jpeg")
         self.write(image)
         self.finish()
@@ -63,8 +62,6 @@ class Application(tornado.web.Application):
 
     def __del__(self):
         self.cap.release()
-
-
 
 
 if __name__ == '__main__':
