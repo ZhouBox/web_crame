@@ -48,9 +48,14 @@ class CameraHandler(BaseHandler):
     def get(self):
         ret, image = self.application.cap.read()
 	if ret:
-            self.set_header("Content-Type", "image/jpeg") 
+            self.set_header("Content-Type", "image/jpeg")
+            self.set_header("Refresh", "1") 
 	    self.set_header("content-transfer-encoding", "binary")
-            self.write(bytes(image.data))
+            r, i = cv2.imencode('.jpg', image)
+	    if r:
+                self.write(bytes(i.data))
+            else:
+                selt.write('Sorry, encode faily!')
         else:
 	    self.write('Sorry, get camera data faily!')
 
