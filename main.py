@@ -47,9 +47,12 @@ class CameraHandler(BaseHandler):
     @auth
     def get(self):
         ret, image = self.application.cap.read()
-        self.set_header("Content-Type", "image/jpeg")
-        self.write(image)
-        self.finish()
+	if ret:
+            self.set_header("Content-Type", "image/jpeg") 
+	    self.set_header("content-transfer-encoding", "binary")
+            self.write(bytes(image.data))
+        else:
+	    self.write('Sorry, get camera data faily!')
 
 
 
